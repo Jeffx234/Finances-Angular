@@ -1,1 +1,52 @@
-<p>category-list works!</p>
+<nav class="mb-5">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a routerLink="/">Home</a>
+    </li>
+    <li class="breadcrumb-item active">
+      <a routerLink="/categories">Categorias</a>
+    </li>
+  </ol>
+</nav>
+
+<div class="container">
+
+</div>
+<div class="row mb-4">
+  <div class="col-md">
+    <h1 class="h2 border-left pl-2">
+      Categorias
+    </h1>
+  </div>
+
+  <div class="col-md">
+    <a class="btn btn-primary float-right" routerLink="/categories/new">
+      Nova Categoria
+    </a>
+  </div>
+</div>
+
+<table class="table table-hover">
+  <thead class="thead-light">
+    <tr class="bg-primary text-light">
+      <th scope="col">Nome</th>
+      <th scope="col">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong> Lazer </strong>
+        <small>Cinema, parque, praia, etc</small>
+      </td>
+      <td>
+        <a [routerLink]="[12, 'edit']" class="btn btn-sm btn-outline-primary m-1">
+          Editar
+        </a>
+        <button class="btn btn-sm btn-outline-danger">
+          Excluir
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

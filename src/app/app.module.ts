@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CategoriesModule } from './pages/categories/categories.module';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,9 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     AppRoutingModule
+  ],
+  exports: [
+    CategoriesModule
   ],
   providers: [],
   bootstrap: [AppComponent]
