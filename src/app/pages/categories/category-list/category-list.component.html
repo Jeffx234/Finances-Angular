@@ -40,7 +40,7 @@
         <small> {{ category.description }} </small>
       </td>
       <td>
-        <a  class="btn btn-sm btn-outline-primary m-1">
+        <a  class="btn btn-sm btn-outline-primary m-1" routerLink="/categories/{{ category.id }}/edit">
           Editar
         </a>
         <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(category)">

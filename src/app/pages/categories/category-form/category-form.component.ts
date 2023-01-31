@@ -6,6 +6,8 @@ import { Category } from '../shared/category.module';
 import { CategoryService } from '../shared/category.service';
 
 import { switchMap } from 'rxjs/operators';
+import { error, success } from "toastr";
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-category-form',
@@ -38,6 +40,16 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     this.setPageTitle();
   }
 
+  submitForm() {
+    this.submittingForm = true;
+
+    if (this.currentAction == "new")
+      this.createCategory();
+    else
+      this.updateCategory();
+  }
+
+
   // PRIVATE METHODS
 
   private setCurrentAction() {
@@ -55,19 +67,17 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     })
   }
 
-  private loadCategory() {
-    if (this.currentAction == "edit") {
-      this.route.paramMap.pipe(
-        switchMap(params => this.categoryService.getById(Number(params.get('id'))))
-      )
-        .subscribe(
-          (category) => {
-            this.category = category;
-            this.categoryForm.patchValue(category) // binds loaded category data to CategoryForm
-          },
-          (error) => alert('Ocorreu um erro no servidor, tente mais tarde.')
+  loadCategory() {
+    this.route.paramMap
+      .pipe(
+        switchMap(params => {
+          if (params.get("id"))
+            return this.categoryService.getById(+params.get("id")!)
+          else
+            return of(new Category())
+        }
         )
-    }
+      )
   }
 
   private setPageTitle() {
@@ -75,7 +85,47 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
       this.pageTitle = "Cadastro de Nova Categoria"
     else {
       const categoryName = this.category.name || "";
-      this.pageTitle = "Editando Categoria: " + categoryName;
+      this.pageTitle = `Editando Categoria: ${categoryName}`
     }
+  }
+
+  public createCategory() {
+    const category: Category = Object.assign(new Category(), this.categoryForm.value);
+
+    this.categoryService.create(category)
+      .subscribe(
+        category => this.actionsForSuccess(category),
+        error => this.actionsForError(error)
+      )
+  }
+
+  private updateCategory() {
+    const category: Category = Object.assign(new Category(), this.categoryForm.value);
+
+    this.categoryService.update(category)
+      .subscribe(
+        category => this.actionsForSuccess(category),
+        error => this.actionsForError(error)
+      )
+  }
+
+  private actionsForSuccess(category: Category) {
+   success("Solicitação processada com sucesso!");
+
+   // redirect/reload component page
+    this.router.navigateByUrl("categories", { skipLocationChange: true }).then(
+      () => this.router.navigate(["categories", category.id, "edit"])
+    )
+  }
+
+  private actionsForError(error: any) {
+    error("Ocorreu um erro ao processar a sua solicitação!");
+
+    this.submittingForm = false;
+
+    if (error.status === 422)
+      this.serverErrorMessages = JSON.parse(error._body).errors;
+    else
+      this.serverErrorMessages = ["Falha na comunicação com o servidor. Por favor, tente mais tarde."]
   }
 }

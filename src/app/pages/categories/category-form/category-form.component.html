@@ -7,7 +7,7 @@
       <a routerLink="/categories">Categorias</a>
     </li>
     <li class="breadcrumb-item active">
-      <a routerLink="/categories/new">Formulário de categorias</a>
+      <a routerLink="/categories/new"> {{ pageTitle }} </a>
     </li>
   </ol>
 </nav>
@@ -18,7 +18,7 @@
 <div class="d-flex mb-4  w-100 justify-content-between">
   <div class="col-md w-100 ">
     <h1 class="h2">
-      Formulário de categoria {{ currentAction  }}
+      {{ pageTitle }}
     </h1>
   </div>
 
@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<form [formGroup]="categoryForm">
+<form [formGroup]="categoryForm" (submit)="submitForm()">
   <div class="card">
     <div class="card-header">
       Informçaões sobre a categoria
@@ -39,18 +39,28 @@
       <div class="form-now d-flex">
         <div class="form-group col-md-4 px-2">
           <label for="name">Nome</label>
-          <input type="text" class="form-control" id="name" placeholder="Nome">
+          <input type="text" class="form-control" id="name" placeholder="Nome" formControlName="name">
+
+          <div class="text-danger" *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched">
+            <small *ngIf="categoryForm.get('name')?.errors">
+              O nome é obrigatório
+            </small>
+          </div>
         </div>
 
         <div class="form-group col-md-4">
           <label for="description">Descrição</label>
-          <input type="text" class="form-control" id="description" placeholder="Descrição">
+          <input type="text" class="form-control" id="description" placeholder="Descrição" formControlName="description">
         </div>
       </div>
     </div>
   </div>
 
-  <button type="submit" class="btn btn-primary mt-3 btn-lg float-right">
+  <button
+    type="submit"
+    class="btn btn-primary mt-3 btn-lg float-right"
+    [disabled]="submittingForm || categoryForm.invalid"
+  >
     Salvar
   </button>
 </form>
