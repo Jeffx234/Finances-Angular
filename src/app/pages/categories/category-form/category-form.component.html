@@ -56,6 +56,15 @@
     </div>
   </div>
 
+  <div class="alert alert-danger mt-4" *ngIf="serverErrorMessages">
+    <strong> Erro no servidor </strong>
+    <ul>
+      <li *ngFor="let message of serverErrorMessages">
+        {{ message }}
+      </li>
+    </ul>
+  </div>
+
   <button
     type="submit"
     class="btn btn-primary mt-3 btn-lg float-right"
